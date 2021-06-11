@@ -312,7 +312,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>3</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -396,6 +396,16 @@
               <FileName>flash_control.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\APP\src\flash_control.c</FilePath>
+            </File>
+            <File>
+              <FileName>OTA.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\APP\src\OTA.c</FilePath>
+            </File>
+            <File>
+              <FileName>delay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\APP\src\delay.c</FilePath>
             </File>
           </Files>
         </Group>

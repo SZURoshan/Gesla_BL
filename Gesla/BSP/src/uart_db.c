@@ -1,6 +1,8 @@
 #include "uart_db.h"
 #include <stdio.h>
 
+#include "OTA.h"
+
 
 uint8_t OTA_FLASH_FLAG = 0;     
 
@@ -58,6 +60,10 @@ void UART_DB_Init(uint32_t baud)
   * @参  数  无 
   * @返回值  无
   */
+u16 USART_RX_STA=0;       //接收状态标记	 
+u16 USART_RX_CNT=0;			//接收的字节数	 
+//u8 USART_RX_BUF[OTA_USART_REC_LEN] = {0}; //OTA接收缓存
+u8 USART_RX_BUF[OTA_USART_REC_LEN] __attribute__ ((at(0X20001000)));//接收缓冲,最大USART_REC_LEN个字节,起始地址为0X20001000. 
 void USART1_IRQHandler(void)
 {
 	uint8_t Res = 0;
@@ -65,10 +71,17 @@ void USART1_IRQHandler(void)
 	if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)  //接收中断
 	{
 		Res =USART_ReceiveData(USART1);	
-		OTA_FLASH_FLAG = Res;//发1进行FLASH写入
-		USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+		if(USART_RX_CNT<OTA_USART_REC_LEN)
+		{
+			USART_RX_BUF[USART_RX_CNT]=Res;
+			USART_RX_CNT++;			 									     
+		} 
 		
-		printf("%d.... \r\n", OTA_FLASH_FLAG);
+//		OTA_FLASH_FLAG = Res;//发1进行FLASH写入
+//		
+//		printf("OTA_FLASH_FLAG：%d.... \r\n", OTA_FLASH_FLAG);
+		
+		//USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
 	} 
 }
 

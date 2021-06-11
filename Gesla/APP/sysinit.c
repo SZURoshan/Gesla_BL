@@ -1,6 +1,9 @@
 #include "sysinit.h"
 #include <stdio.h>
 
+/* APP */
+#include "delay.h"
+
 /* BSP */
 #include "uart_db.h"
 #include "led.h"
@@ -10,7 +13,8 @@ void System_Init(void)
 	UART_DB_Init(115200);
 
 	LED_Init();
-		
+	delay_init();
+	
 	printf("BootLoader init... \r\n");
 }
 

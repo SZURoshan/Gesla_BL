@@ -19,5 +19,11 @@ void LED_Init(void)
 	GPIO_SetBits(GPIOD,GPIO_Pin_2);
 	GPIO_SetBits(GPIOA,GPIO_Pin_8);	
 	
+#if 1
 	LED_Green_On();
+	LED_Red_On();
+#else
+	LED_Green_Off();
+	LED_Red_Off();
+#endif
 }
