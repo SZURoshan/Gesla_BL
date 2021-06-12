@@ -4,6 +4,9 @@
 /* BSP */
 #include "uart_db.h"
 
+
+uint16_t NEED_OTA_FLAG = 0;//1需要更新FW  0不需要更新FW
+
 extern uint8_t OTA_FLASH_FLAG;
 //要写入到STM32 FLASH的字符串数组
 const u8 TEXT_Buffer[]={"STM32 FLASH TEST"};
@@ -49,6 +52,22 @@ void Flash_Write_NoCheck(u32 WriteAddr,u16 *pBuffer,u16 NumToWrite)
 	    WriteAddr += 2;//地址增加2.
 	}  
 } 
+
+//出现 FLASH_ERROR_PG 时，换用这种写法
+void Writeflash(u32 addr,u16 data)
+{
+	volatile FLASH_Status FLASHStatus = FLASH_COMPLETE;
+
+	FLASH_Unlock();
+	FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_PGERR | FLASH_FLAG_WRPRTERR);
+	FLASHStatus = FLASH_ErasePage(addr);
+
+	if(FLASHStatus == FLASH_COMPLETE)
+	{
+		FLASH_ProgramHalfWord(addr,data);
+	}
+	FLASH_Lock();
+}
 
 /************************************flash test*********************************************/
 #define FLASH_MAX_SIZE 8 //可写入的最大字节数(8 bits),不能超过F1的256*1024
