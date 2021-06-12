@@ -15,7 +15,7 @@ void System_Init(void)
 	LED_Init();
 	delay_init();
 	
-	printf("BootLoader init... \r\n");
+	printf(" BootLoader init... \r\n");
 }
 
 int16_t constrain_int16_t(int16_t amt, int16_t low, int16_t high)

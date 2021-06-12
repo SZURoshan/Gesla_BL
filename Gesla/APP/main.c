@@ -15,7 +15,6 @@
 #include "uart_db.h"
 const u8 OTA_TEST[]={"Sanger"};
 
-//uint32_t addr = FLASH_FW_ADDR;//FLASH_FW_ADDR;
 int main(void)
 {	
 	u16 oldcount = 0;	//老的串口接收数据值
@@ -26,8 +25,6 @@ int main(void)
 	
 	while(1)
 	{
-		//Flash_Test();
-		//printf("0x%08X \r\n" , ((*(vu32*)(0X20001000+4))&0xFF000000) );
 		if(recive_ota_bin_flag)
 		{
 			if(USART_RX_CNT)
@@ -53,7 +50,6 @@ int main(void)
 		}
 		else
 		{
-			#if 1
 			if(((*(vu32*)(0X20001000+4))&0xFF000000)==0x08000000)//判断是否为0X08XXXXXX.
 			{
 				printf("开始更新固件...\r\n");
@@ -64,7 +60,7 @@ int main(void)
 				printf("FLASH FW running: 0x%02X \r\n", FLASH_FW_ADDR);
 
 				delay_ms(1000);
-				if(((*(vu32*)(FLASH_FW_ADDR+4))&0xFF000000)==0x08000000)//判断是否为0X08XXXXXX.
+				if(((*(vu32*)(FLASH_FW_ADDR+4))&0xFF000000)==0x08000000)//判断OTA里面主程序开始地址是否合法，是否为0X08XXXXXX.
 				{
 					iap_load_app(FLASH_FW_ADDR);//执行FLASH APP代码
 				}
@@ -78,7 +74,6 @@ int main(void)
 			{
 				printf("it is not FW flash bin...\r\n");
 			}
-			#endif
 			
 			printf("re-start recieve...\r\n");
 			recive_ota_bin_flag = 1;
