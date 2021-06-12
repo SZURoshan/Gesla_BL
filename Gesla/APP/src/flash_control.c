@@ -44,7 +44,7 @@ void Flash_Write_NoCheck(u32 WriteAddr,u16 *pBuffer,u16 NumToWrite)
 	printf("[flash][OTA] Flash_Write_NoCheck...\r\n");
 	for(i=0; i<NumToWrite; i++)
 	{
-		printf("[flash][OTA] NoCheck WriteAddr: 0x%08X, data: %04x \r\n", WriteAddr, pBuffer[i]);
+		//printf("[flash][OTA] NoCheck WriteAddr: 0x%08X, data: %04x \r\n", WriteAddr, pBuffer[i]);
 		FLASH_ProgramHalfWord(WriteAddr, pBuffer[i]);
 	    WriteAddr += 2;//µØÖ·Ôö¼Ó2.
 	}  
