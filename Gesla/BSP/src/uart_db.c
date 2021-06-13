@@ -76,12 +76,6 @@ void USART1_IRQHandler(void)
 			USART_RX_BUF[USART_RX_CNT]=Res;
 			USART_RX_CNT++;			 									     
 		} 
-		
-//		OTA_FLASH_FLAG = Res;//发1进行FLASH写入
-//		
-//		printf("OTA_FLASH_FLAG：%d.... \r\n", OTA_FLASH_FLAG);
-		
-		//USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
 	} 
 }
 

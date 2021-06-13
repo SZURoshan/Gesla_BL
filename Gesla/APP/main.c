@@ -24,13 +24,13 @@ int main(void)
 	
 	System_Init();
 	
-	FLASH_Unlock();//解锁
-	Writeflash(NEED_OTA_FLAG_ADDR, 0);//flash 重置
-	FLASH_Lock();//上锁
-	delay_ms(1000);//防止快速运行到unlock
+//	FLASH_Unlock();//解锁
+//	Writeflash(NEED_OTA_FLAG_ADDR, 0);//flash 重置
+//	FLASH_Lock();//上锁
+//	delay_ms(1000);//防止快速运行到unlock
 	
 	NEED_OTA_FLAG = Flash_ReadHalfWord(NEED_OTA_FLAG_ADDR);
-	printf("get NEED_OTA_FLAG: %d \r\n", NEED_OTA_FLAG);
+	printf("BL_1 get NEED_OTA_FLAG: %d \r\n", NEED_OTA_FLAG);
 	
 	while(1)
 	{
@@ -99,7 +99,7 @@ int main(void)
 				delay_ms(1000);//防止快速运行到unlock
 				
 				NEED_OTA_FLAG = Flash_ReadHalfWord(NEED_OTA_FLAG_ADDR);
-				printf("get NEED_OTA_FLAG: %d \r\n", NEED_OTA_FLAG);
+				printf("BL_3 get NEED_OTA_FLAG: %d \r\n", NEED_OTA_FLAG);
 			}
 		}
 		else //do not recieve OTA bin, FW start immediately
@@ -129,7 +129,7 @@ int main(void)
 			delay_ms(1000);//防止快速运行到unlock
 			
 			NEED_OTA_FLAG = Flash_ReadHalfWord(NEED_OTA_FLAG_ADDR);
-			printf("get NEED_OTA_FLAG: %d \r\n", NEED_OTA_FLAG);
+			printf("BL_2 get NEED_OTA_FLAG: %d \r\n", NEED_OTA_FLAG);
 		}
 	}
 }
