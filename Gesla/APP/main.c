@@ -15,22 +15,20 @@
 #include "uart_db.h"
 
 const u8 OTA_TEST[]={"Sanger"};
-
+uint32_t reset_time = 0;
 int main(void)
 {	
+	SCB->VTOR = FLASH_BASE;
+	
 	u16 oldcount = 0;	//老的串口接收数据值
 	u32 applenth = 0;	//接收到的app代码长度
 	u8  recive_ota_bin_flag  = 1;//1正在收数据, 0接收完毕
 	
 	System_Init();
 	
-//	FLASH_Unlock();//解锁
-//	Writeflash(NEED_OTA_FLAG_ADDR, 0);//flash 重置
-//	FLASH_Lock();//上锁
-//	delay_ms(1000);//防止快速运行到unlock
-	
 	NEED_OTA_FLAG = Flash_ReadHalfWord(NEED_OTA_FLAG_ADDR);
 	printf("BL_1 get NEED_OTA_FLAG: %d \r\n", NEED_OTA_FLAG);
+	printf("FW USART_RX_CNT: %d \r\n", USART_RX_CNT);
 	
 	while(1)
 	{
@@ -59,15 +57,26 @@ int main(void)
 					}				
 				}
 				delay_ms(10);
+				
+				reset_time++;
+				if(reset_time > 1000)//从FW 回来要记得reset，不然进不了uart interrupt
+				{
+					reset_time = 0;
+					// 关闭所有中断
+					__set_FAULTMASK(1); 
+					// 复位
+					NVIC_SystemReset(); 				
+				}
 			}
 			else
 			{
-				if(((*(vu32*)(0X20001000+4))&0xFF000000)==0x08000000)//判断是否为0X08XXXXXX.
+				if(((*(vu32*)(USART_RX_BUF+4))&0xFF000000)==0x08000000)//判断是否为0X08XXXXXX.
 				{
 					printf("开始更新固件...\r\n");
 					OTA_Begin(FLASH_FW_ADDR, USART_RX_BUF, applenth);
 					printf("固件更新完成!\r\n");	
 					
+					#if 0
 					/* FW Running */
 					printf("FLASH FW running: 0x%02X \r\n", FLASH_FW_ADDR);
 
@@ -80,7 +89,17 @@ int main(void)
 					{
 						printf("illegal ota bin FLASH_FW_ADDR: %x \r\n", ((*(vu32*)(FLASH_FW_ADDR+4))&0xFF000000));
 					}
-
+					#else
+					FLASH_Unlock();//解锁
+					Writeflash(NEED_OTA_FLAG_ADDR, 0);//flash 重置
+					FLASH_Lock();//上锁
+					
+					
+					NEED_OTA_FLAG = Flash_ReadHalfWord(NEED_OTA_FLAG_ADDR);
+					printf("BL system reset, NEED_OTA_FLAG: %d \r\n", NEED_OTA_FLAG);
+					delay_ms(1000);//防止快速运行到unlock
+					NVIC_SystemReset();
+					#endif
 				}
 				else
 				{
@@ -97,6 +116,7 @@ int main(void)
 				Writeflash(NEED_OTA_FLAG_ADDR, 1);//flash 重置
 				FLASH_Lock();//上锁
 				delay_ms(1000);//防止快速运行到unlock
+				reset_time = 0;
 				
 				NEED_OTA_FLAG = Flash_ReadHalfWord(NEED_OTA_FLAG_ADDR);
 				printf("BL_3 get NEED_OTA_FLAG: %d \r\n", NEED_OTA_FLAG);
@@ -127,6 +147,7 @@ int main(void)
 			Writeflash(NEED_OTA_FLAG_ADDR, 1);//flash 重置
 			FLASH_Lock();//上锁
 			delay_ms(1000);//防止快速运行到unlock
+			reset_time = 0;
 			
 			NEED_OTA_FLAG = Flash_ReadHalfWord(NEED_OTA_FLAG_ADDR);
 			printf("BL_2 get NEED_OTA_FLAG: %d \r\n", NEED_OTA_FLAG);

@@ -12,5 +12,6 @@ extern u16 USART_RX_CNT;				//接收的字节数
 
 void UART_DB_Init(uint32_t baud);  //UART 调试串口初始化
 uint8_t UART_DB_GetData(uint8_t *pbuf);  //UART 获取接收的数据
+void UART1_Reset(void);
 
 #endif 

@@ -10,6 +10,7 @@
 
 void System_Init(void)
 {
+	UART1_Reset();
 	UART_DB_Init(115200);
 
 	LED_Init();

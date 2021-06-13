@@ -6,6 +6,7 @@
 
 
 uint16_t NEED_OTA_FLAG = 0;//1需要更新FW  0不需要更新FW
+uint16_t NEED_BL_RESET_FLAG = 0;//1需要重启BL  0不需要重启BL
 
 extern uint8_t OTA_FLASH_FLAG;
 //要写入到STM32 FLASH的字符串数组

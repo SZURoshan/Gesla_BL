@@ -15,8 +15,10 @@
 #define FLASH_FW_ADDR     ((uint32_t)0x08004000) //16k BootLoader remain
 
 #define NEED_OTA_FLAG_ADDR ((uint32_t)0x08003002)
-extern uint16_t NEED_OTA_FLAG;//1需要更新FW  0不需要更新FW
+//#define NEED_BL_SYSTEM_RESET_ADDR ((uint32_t)0x08003006)
 
+extern uint16_t NEED_OTA_FLAG;//1需要更新FW  0不需要更新FW
+//extern uint16_t NEED_BL_RESET_FLAG;
 
 u32 STMFLASH_ReadWord(u32 faddr);
 u16 STMFLASH_ReadHalfWord(u32 faddr);
